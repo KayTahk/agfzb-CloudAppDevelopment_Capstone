@@ -20,6 +20,7 @@ urlpatterns = [
 
     # path for login
     path(route='login_request', view=views.login_request, name='login_request'),
+    path(route='login_page', view=views.login_page, name='login_page'),
 
     # path for logout
     path(route='logout_request', view=views.logout_request, name='logout_request'),
