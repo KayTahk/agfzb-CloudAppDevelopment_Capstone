@@ -46,10 +46,9 @@ class CarModel(models.Model):
     # Create a toString method to print a car make object
     def __str__(self):
         return "Name: " + self.name + "," + \
-            "Dealer id: " + self.dealer_id + "," + \
+            "Dealer id: " + str(self.dealer_id) + "," + \
             "Type: " + self.car_type + "," + \
-            "Year: " + self.year + "," + \
-            "Make: " + self.make 
+            "Year: " + str(self.year) 
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 
