@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import CarDealer
+from .models import CarDealer, CarModel
 from .restapis import get_dealers_from_cf, get_request, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -108,6 +108,9 @@ def get_dealer_details(request, dealer_id):
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         # Return a list of reviews
         context["review_list"] = reviews
+        dealer_url = "https://kayleightahk-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get?id=" + str(dealer_id)
+        dealers = get_dealers_from_cf(dealer_url)
+        context["dealer"] = dealers
         return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `add_review` view to submit a review
@@ -118,10 +121,16 @@ def add_review(request, dealer_id):
         dealer_url = "https://kayleightahk-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get?id=" + str(dealer_id)
         dealers = get_dealers_from_cf(dealer_url)
         context["dealer"] = dealers
+        # Get cars for the dealer
+        cars = CarModel.objects.all()
+        print(cars)
+        context["cars"] = cars
         return render(request, 'djangoapp/add_review.html', context)
 
     elif request.method == 'POST':
         if request.user.is_authenticated:
+            car_id = request.POST["car"]
+            car = CarModel.objects.get(pk=car_id)
             review = {
                 "id": dealer_id,
                 "name":request.user.username,  # Assuming you want to use the authenticated user's name
@@ -129,9 +138,9 @@ def add_review(request, dealer_id):
                 "review": request.POST["content"],  # Extract the review from the POST request
                 "purchase": True,   # Extract purchase info from POST
                 "purchase_date":request.POST["purchasedate"],  # Extract purchase date from POST
-                "car_make":request.POST["car_make"],  # Extract car make from POST
-                "car_model":request.POST["car_model"],  # Extract car model from POST
-                "car_year":request.POST["car_year"],  # Extract car year from POST
+                "car_make":car.make.name,  # Extract car make from POST
+                "car_model":car.name,  # Extract car model from POST
+                "car_year":int(car.year.strftime("%Y")),  # Extract car year from POST
             }
             print(review)
             review_post_url = "https://kayleightahk-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
