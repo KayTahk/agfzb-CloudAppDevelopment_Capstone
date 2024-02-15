@@ -15,7 +15,8 @@
     <h2>Submit a Review for {{ dealer.full_name }}</h2>
     {% endfor %}
 
-    <form action="{% url 'djangoapp:add_review' dealer_id=dealer_info.id %}" method="POST">
+    {% for dealer in dealer_info %}
+    <form action="{% url 'djangoapp:add_review' dealer_id=dealer.id %}" method="POST">
         {% csrf_token %}
         
         <!-- Review content -->
@@ -41,5 +42,6 @@
         <!-- Submit button -->
         <button type="submit">Submit Review</button>
     </form>
+    {% endfor %}
 </div>
 </html>
