@@ -123,18 +123,17 @@ def add_review(request, dealer_id):
     elif request.method == 'POST':
         if request.user.is_authenticated:
             review = {
-                "id":23,
-                "time":datetime.utcnow().isoformat(),
+                "id": dealer_id,
                 "name":request.user.username,  # Assuming you want to use the authenticated user's name
-                "dealership" :23,                
+                "dealership" : dealer_id,                
                 "review": request.POST["content"],  # Extract the review from the POST request
-                "purchase": True,  # Extract purchase info from POST
+                "purchase": True,   # Extract purchase info from POST
                 "purchase_date":request.POST["purchasedate"],  # Extract purchase date from POST
                 "car_make":request.POST["car_make"],  # Extract car make from POST
                 "car_model":request.POST["car_model"],  # Extract car model from POST
                 "car_year":request.POST["car_year"],  # Extract car year from POST
             }
             print(review)
-            review_post_url = "https://kayleightahk-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/post_review"
-            post_request(review_post_url, review, id=23)
-        return redirect('djangoapp:dealer_details', id=23)
+            review_post_url = "https://kayleightahk-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
+            post_request(review_post_url, review, id=dealer_id)
+        return redirect('djangoapp:dealer_details', dealer_id=dealer_id)
