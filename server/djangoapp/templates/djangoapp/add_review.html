@@ -10,7 +10,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
 
 </head>
-    <body>
-    <!--Add review form here -->
-    </body>
+<div class="container mt-5">
+    {% for dealer in dealer_info %}
+    <h2>Submit a Review for {{ dealer.full_name }}</h2>
+    {% endfor %}
+
+    <form action="{% url 'djangoapp:add_review' dealer_id=dealer_info.id %}" method="POST">
+        {% csrf_token %}
+        
+        <!-- Review content -->
+        <label for="review_content">Review:</label><br>
+        <textarea id="review_content" name="content" rows="4" cols="50"></textarea><br>
+        
+        <!-- Purchase date -->
+        <label for="purchase_date">Purchase Date:</label><br>
+        <input type="text" id="purchase_date" name="purchasedate"><br>
+        
+        <!-- Car make -->
+        <label for="car_make">Car Make:</label><br>
+        <input type="text" id="car_make" name="car_make"><br>
+        
+        <!-- Car model -->
+        <label for="car_model">Car Model:</label><br>
+        <input type="text" id="car_model" name="car_model"><br>
+        
+        <!-- Car year -->
+        <label for="car_year">Car Year:</label><br>
+        <input type="text" id="car_year" name="car_year"><br>
+        
+        <!-- Submit button -->
+        <button type="submit">Submit Review</button>
+    </form>
+</div>
 </html>
